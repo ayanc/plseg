@@ -1,0 +1,15 @@
+name: plseg-ui
+channels:
+    - conda-forge
+    - defaults
+
+dependencies:
+    - python=3.8
+    - numpy
+    - scipy
+    - scikit-image
+    - jupyter
+    - ipywidgets
+    - matplotlib
+    - ipympl
+    - voila
