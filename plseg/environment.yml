@@ -8,11 +8,8 @@ dependencies:
     - numpy
     - scipy
     - scikit-image
-    - jupyter
-    - ipywidgets
-    - matplotlib
-    - ipympl
-    - voila
+    - imageio
+    - Flask
     - tqdm
     - pip
     - pip:

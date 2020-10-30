@@ -59,6 +59,7 @@ def joincc(lmap, prev, ucost0, ewts, opt):
                ewts[2][_y1:(_y2-1), _x1:(_x2-1)],
                ewts[3][_y1:(_y2-1), _x1:(_x2-1)]]
 
+        joined = False
         for _ in range(opt.joinit):
             # Do a graph cut after biasing the background
             ucost[chull, 0] = ucost[chull, 0] + opt.joininc
@@ -80,7 +81,16 @@ def joincc(lmap, prev, ucost0, ewts, opt):
                 # Patch things back in
                 lmxy[lmxy2 == 1] = lbl
                 lmap[_y1:_y2, _x1:_x2] = lmxy
+                joined = True
                 break
+
+        if not joined:
+            ccxy = ndi.label(lmxy == lbl)[0]
+            ccount = np.bincount(ccxy.flatten())
+            ccsort = np.argsort(-ccount[1:])
+            for idx in range(1, len(ccsort)):
+                lmxy[ccxy == (ccsort[idx]+1)] = 0
+            lmap[_y1:_y2, _x1:_x2] = lmxy
 
     return lmap
 
@@ -167,10 +177,15 @@ def separateconnect(binary, prev, ucost0, ewts, opt):
             continue
         mlmean = np.asarray([np.mean(np.float64(_lpos[0])),
                              np.mean(np.float64(_lpos[1]))], np.float64)
-        idx = np.nanargmin(np.sum(np.square(mlmean-newmeans), -1))
-        lmap[lmap == -(idx+1)] = mlbl
-        newmeans[idx, :] = np.NAN
-        nnew = nnew - 1
+        dists = np.sum(np.square(mlmean-newmeans), -1)
+        if np.nanmin(dists) < np.square(opt.ccnbd*8):
+            idx = np.nanargmin(dists)
+            lmap[lmap == -(idx+1)] = mlbl
+            newmeans[idx, :] = np.NAN
+            nnew = nnew - 1
+        else:  # Too far
+            if np.all(lmap[prev == mlbl] == 0):
+                lmap[prev == mlbl] = mlbl
 
     # Create new labels out of any left
     idx = np.where(np.bincount(
