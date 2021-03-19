@@ -66,7 +66,7 @@ Clicking **Save** will create a new file `clean.npz` in each sub-directory, whic
 
 ![](images/deletion-demo.gif)
 
-The deletion tool can be used to discard sections of the segmentation that you may not want to focus on. For example, if you want to obtain the subsection of the plants before they bloom. The usage is similar to the Interactive Cleanup tool, except the selected labels will only be eliminated from the selected frame onwards. Clicking **Save** will create the file `bloom-time.npz`. The new `labels` variable will omit the discarded section of each label. Furthermore, the `bloom-time` variable is an array in which `array[<label name>]=<selected frame number>` for the deleted labels, and `array[<label name>]=-1` if the label was not modified. 
+The deletion tool can be used to discard sections of the segmentation that you may not want to focus on. For example, if you want to obtain the subsection of the plants before they bloom. Call `pldeletion.py` with the name of the base target directory. The usage is similar to the Interactive Cleanup tool, except the selected labels will only be eliminated from the selected frame onwards. Clicking **Save** will create the file `bloom-time.npz`. The new `labels` variable will omit the discarded section of each label. Furthermore, the `bloom-time` variable is an array in which `array[<label name>]=<selected frame number>` for the deleted labels, and `array[<label name>]=-1` if the label was not modified. 
 
 Additional command-line options extend the functionality of this tool. 
 
