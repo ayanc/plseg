@@ -62,6 +62,23 @@ As an optional final stage, you can mark plants that were incorrectly segmented 
 
 Clicking **Save** will create a new file `clean.npz` in each sub-directory, which will contain a variable `removed` listing the IDs that were removed from the segmentation in `labels.npz`, and a new `labels` variable with only the labels that were not marked for removal (with new plant IDs from from 1 to the number of remaining plants). Once you are done marking all volumes, you can optionally run the script `vizcseg.py` with the base target directory as argument, that visualizes the cleaned up segmentations by creating corresponding image files tagged with `-cseg` in their names.
 
+### 4. Deletion Tool
+
+![](images/deletion-demo.gif)
+
+The deletion tool can be used to discard sections of the segmentation that you may not want to focus on. For example, if you want to obtain the subsection of the plants before they bloom. The usage is similar to the Interactive Cleanup tool, except the selected labels will only be eliminated from the selected frame onwards. Clicking **Save** will create the file `bloom-time.npz`. The new `labels` variable will omit the discarded section of each label. Furthermore, the `bloom-time` variable is an array in which `array[<label name>]=<selected frame number>` for the deleted labels, and `array[<label name>]=-1` if the label was not modified. 
+
+Additional command-line options extend the functionality of this tool. 
+
+* `--input` (default `cleanup`) the name of the `.npz` file to use as input (use `labels` if the cleanup tool was not used)
+* `--name` (default `bloom-time`) the name of the `.npz` file to produce
+* `--type` (default `1`) defines the type of deletion to make when the user clicks a plant label it may be any of the following:
+  * `1` deletes the plant label from the current image onwards
+  * `2` deletes the plant label from the first image to the current image
+  * `3` deletes the plant label only at the current frame
+
+
+
 ## LICENSE
 
 [MIT License](LICENSE)
